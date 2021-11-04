@@ -47,7 +47,7 @@ logging_basic_config()
               help='The output file for transactions. '
                    'If not provided transactions will not be exported. Use "-" for stdout')
 @click.option('-c', '--chain', default='ethereum', show_default=True, type=str, help='The chain network to connect to.')
-@click.option('--no-contracts', default=False, show_default=True, type=bool, is_flag=True, help='When exporting transactions, drop contract information.')
+@click.option('--no-contracts', default=False, show_default=True, type=bool, is_flag=True, help='When exporting transactions, drop contract information, replacing with "0xdead".')
 def export_blocks_and_transactions(start_block, end_block, batch_size, provider_uri, max_workers, blocks_output,
                                    transactions_output, chain='ethereum', no_contracts=False):
     """Exports blocks and transactions."""

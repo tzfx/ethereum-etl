@@ -59,7 +59,7 @@ class EthTransactionMapper(object):
             'value': transaction.value,
             'gas': transaction.gas,
             'gas_price': transaction.gas_price,
-            'input': transaction.input if (no_contracts is False) or (transaction.to_address is not None) else None,
+            'input': transaction.input if (no_contracts is False or transaction.input == "0x") else "0xdead",
             'max_fee_per_gas': transaction.max_fee_per_gas,
             'max_priority_fee_per_gas': transaction.max_priority_fee_per_gas,
             'transaction_type': transaction.transaction_type
