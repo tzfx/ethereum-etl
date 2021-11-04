@@ -47,21 +47,24 @@ logging_basic_config()
               help='The output file for transactions. '
                    'If not provided transactions will not be exported. Use "-" for stdout')
 @click.option('-c', '--chain', default='ethereum', show_default=True, type=str, help='The chain network to connect to.')
-@click.option('--no-contracts', default=False, show_default=True, type=bool, help='Drop contract input data from export.')
+@click.option('--no-contracts', default=False, show_default=True, type=bool, is_flag=True, help='When exporting transactions, drop contract information.')
 def export_blocks_and_transactions(start_block, end_block, batch_size, provider_uri, max_workers, blocks_output,
                                    transactions_output, chain='ethereum', no_contracts=False):
     """Exports blocks and transactions."""
     provider_uri = check_classic_provider_uri(chain, provider_uri)
     if blocks_output is None and transactions_output is None:
-        raise ValueError('Either --blocks-output or --transactions-output options must be provided')
+        raise ValueError(
+            'Either --blocks-output or --transactions-output options must be provided')
 
     job = ExportBlocksJob(
         start_block=start_block,
         end_block=end_block,
         batch_size=batch_size,
-        batch_web3_provider=ThreadLocalProxy(lambda: get_provider_from_uri(provider_uri, batch=True)),
+        batch_web3_provider=ThreadLocalProxy(
+            lambda: get_provider_from_uri(provider_uri, batch=True)),
         max_workers=max_workers,
-        item_exporter=blocks_and_transactions_item_exporter(blocks_output, transactions_output),
+        item_exporter=blocks_and_transactions_item_exporter(
+            blocks_output, transactions_output),
         export_blocks=blocks_output is not None,
         export_transactions=transactions_output is not None,
         no_contracts=no_contracts)

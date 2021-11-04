@@ -40,9 +40,12 @@ def read_resource(resource_group, file_name):
     (0, 0, 1, 'block_without_transactions', 'mock', False),
     (483920, 483920, 1, 'block_with_logs', 'mock', False),
     (447432, 447432, 1, 'blocks_with_transactions_no_contracts', 'mock', True),
+    (447432, 447432, 1, 'blocks_with_transactions_and_contracts', 'mock', False),
     (47218, 47219, 1, 'blocks_with_transactions', 'mock', False),
     (47218, 47219, 2, 'blocks_with_transactions', 'mock', False),
     skip_if_slow_tests_disabled((0, 0, 1, 'block_without_transactions', 'infura', False)),
+    skip_if_slow_tests_disabled((447432, 447432, 1, 'blocks_with_transactions_no_contracts', 'infura', True)),
+    skip_if_slow_tests_disabled((447432, 447432, 1, 'blocks_with_transactions_and_contracts', 'infura', False)),
     skip_if_slow_tests_disabled((483920, 483920, 1, 'block_with_logs', 'infura', False)),
     skip_if_slow_tests_disabled((47218, 47219, 2, 'blocks_with_transactions', 'infura', False)),
 ])
@@ -59,7 +62,7 @@ def test_export_blocks_job(tmpdir, start_block, end_block, batch_size, resource_
         item_exporter=blocks_and_transactions_item_exporter(blocks_output_file, transactions_output_file),
         export_blocks=blocks_output_file is not None,
         export_transactions=transactions_output_file is not None,
-        no_contracts=no_contracts or False
+        no_contracts=no_contracts
     )
     job.run()
 
