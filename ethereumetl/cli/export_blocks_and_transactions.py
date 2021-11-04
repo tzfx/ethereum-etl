@@ -47,8 +47,9 @@ logging_basic_config()
               help='The output file for transactions. '
                    'If not provided transactions will not be exported. Use "-" for stdout')
 @click.option('-c', '--chain', default='ethereum', show_default=True, type=str, help='The chain network to connect to.')
+@click.option('--no-contracts', default=False, show_default=True, type=bool, help='Drop contract input data from export.')
 def export_blocks_and_transactions(start_block, end_block, batch_size, provider_uri, max_workers, blocks_output,
-                                   transactions_output, chain='ethereum'):
+                                   transactions_output, chain='ethereum', no_contracts=False):
     """Exports blocks and transactions."""
     provider_uri = check_classic_provider_uri(chain, provider_uri)
     if blocks_output is None and transactions_output is None:
@@ -62,5 +63,6 @@ def export_blocks_and_transactions(start_block, end_block, batch_size, provider_
         max_workers=max_workers,
         item_exporter=blocks_and_transactions_item_exporter(blocks_output, transactions_output),
         export_blocks=blocks_output is not None,
-        export_transactions=transactions_output is not None)
+        export_transactions=transactions_output is not None,
+        no_contracts=no_contracts)
     job.run()

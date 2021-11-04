@@ -42,7 +42,8 @@ class ExportBlocksJob(BaseJob):
             max_workers,
             item_exporter,
             export_blocks=True,
-            export_transactions=True):
+            export_transactions=True,
+            no_contracts=False):
         validate_range(start_block, end_block)
         self.start_block = start_block
         self.end_block = end_block
@@ -56,6 +57,8 @@ class ExportBlocksJob(BaseJob):
         self.export_transactions = export_transactions
         if not self.export_blocks and not self.export_transactions:
             raise ValueError('At least one of export_blocks or export_transactions must be True')
+
+        self.no_contracts=no_contracts
 
         self.block_mapper = EthBlockMapper()
         self.transaction_mapper = EthTransactionMapper()
@@ -84,7 +87,7 @@ class ExportBlocksJob(BaseJob):
             self.item_exporter.export_item(self.block_mapper.block_to_dict(block))
         if self.export_transactions:
             for tx in block.transactions:
-                self.item_exporter.export_item(self.transaction_mapper.transaction_to_dict(tx))
+                self.item_exporter.export_item(self.transaction_mapper.transaction_to_dict(tx, self.no_contracts))
 
     def _end(self):
         self.batch_work_executor.shutdown()

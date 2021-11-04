@@ -45,7 +45,7 @@ class EthTransactionMapper(object):
         transaction.transaction_type = hex_to_dec(json_dict.get('type'))
         return transaction
 
-    def transaction_to_dict(self, transaction):
+    def transaction_to_dict(self, transaction, no_contracts=False):
         return {
             'type': 'transaction',
             'hash': transaction.hash,
@@ -59,7 +59,7 @@ class EthTransactionMapper(object):
             'value': transaction.value,
             'gas': transaction.gas,
             'gas_price': transaction.gas_price,
-            'input': transaction.input,
+            'input': transaction.input if (no_contracts is False) or (no_contracts is True and transaction.to_address is not None) else None,
             'max_fee_per_gas': transaction.max_fee_per_gas,
             'max_priority_fee_per_gas': transaction.max_priority_fee_per_gas,
             'transaction_type': transaction.transaction_type
